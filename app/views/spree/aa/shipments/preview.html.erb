@@ -1,0 +1,64 @@
+<div class="toolbar" data-hook="toolbar">
+  <ul class="actions">
+    <li id='new_shipment_section'>
+      <%= button_link_to "Export to csv", "/admin/dashboard/shipments/export_to_csv"%>
+    </li>
+  </ul>
+  <br class="clear" />
+</div>
+<h3>Overview</h3>
+<h4>Total Order involved: <%=@display_hash.size%></h4>
+<h4>Total Products needs to be send: <%=@total_send_products%></h4>
+<p>
+Notes: <br />
+This new system only work for the orders puchased after 28th June 2012 <br/>
+Old orders appeared(1 or 2 days before) is because some products are become availabe from backordered, Otherwise that is a bug.<br/>
+We did not puts weight, height etc on because we do not kown currently <br/>
+Please feedback the tracking number through clicking Edit link in Action column<br />
+<b>You will end up duplicated shipments if you did not feedback tracking numbers on time.</b> <br/> 
+</p>
+ 
+<table class="index">
+  <thead>
+    <tr>
+      <th>Order Number</th>
+      <th>Action</th>
+      <th>Time</th>
+      <th>Shipping to User</th>
+      <th>Order State</th>
+      <th>Payment State</th>
+      <th>Order Shipment State</th>
+      <th>Inventory State</th>
+      <th>Inventory Units</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @display_hash.each_pair do |order_id, value| %>
+      <%rowspan = value["preview_object"].category_count%>
+      <% icount = 0%>
+      <% value["preview_object"].get_categorized_inventory.each_pair do |key, product_value|%>
+        <tr>      
+        <% if icount == 0%>
+          <td rowspan=<%=rowspan%>><%= link_to value["order"].number, admin_order_path(value["order"]) %></td>
+          <td rowspan=<%=rowspan%>><%= link_to_with_icon 'edit', t(:edit), edit_admin_order_shipment_url(value["order"], value["order"].shipments.first) %></td>          
+          <td rowspan=<%=rowspan%>><%=value["order"].completed_at%></td>
+          <td rowspan=<%=rowspan%>><%=value["order"].ship_address.full_name%></td>
+          <td rowspan=<%=rowspan%>><%=value["order"].state%></td>
+          <td rowspan=<%=rowspan%>><%=value["order"].payment_state%></td>
+          <td rowspan=<%=rowspan%>><%=value["order"].shipment_state%></td>          
+        <% end %>        
+        <td><%=key%>(<%=ShipmentPreviewObject.category_size(product_value)%>)</td>
+        <td><%
+          product_value.each_pair do |variant_id, quantity|
+          %>
+          <%=Spree::Product.find(variant_id).name%>(<%=quantity%>)<br/>
+          <%
+          end
+        %></td>        
+        </tr>
+        <% icount += 1%>
+      <% end %>
+    <% end %>
+  </tbody>
+  
+</table>

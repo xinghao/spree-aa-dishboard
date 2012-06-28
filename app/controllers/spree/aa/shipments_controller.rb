@@ -1,4 +1,4 @@
-class ShipmentsController < Spree::Admin::BaseController
+class Spree::Aa::ShipmentsController < Spree::Admin::BaseController
   before_filter :load_data
   
   
