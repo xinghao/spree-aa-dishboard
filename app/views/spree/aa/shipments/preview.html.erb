@@ -51,7 +51,7 @@ Please feedback the tracking number through clicking Edit link in Action column<
         <td><%
           product_value.each_pair do |variant_id, quantity|
           %>
-          <%=Spree::Variant.find(variant_id).product.name%>(<%=quantity%>)<br/>
+          <%=Spree::Variant.find(variant_id).name%>(<%=quantity%>)<br/>
           <%
           end
         %></td>        
