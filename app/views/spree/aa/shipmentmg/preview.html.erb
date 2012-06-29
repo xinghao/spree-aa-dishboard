@@ -1,12 +1,12 @@
 <div class="toolbar" data-hook="toolbar">
   <ul class="actions">
     <li id='new_shipment_section'>
-      <%= button_link_to "Export to csv", "/admin/dashboard/shipments/export_to_csv"%>
+      <%= button_link_to "Export to csv", "/admin/dashboard/shipmentmg/export_to_csv"%>
     </li>
   </ul>
   <br class="clear" />
 </div>
-<h3>Overview</h3>
+<h3>Shipments CSV Overview</h3>
 <h4>Total Order involved: <%=@display_hash.size%></h4>
 <h4>Total Products needs to be send: <%=@total_send_products%></h4>
 <p>

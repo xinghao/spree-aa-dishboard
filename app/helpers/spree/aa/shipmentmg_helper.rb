@@ -1,6 +1,6 @@
 module Spree
   module Aa
-    module DishboardHelper
+    module ShipmentmgHelper
     end
   end
 end

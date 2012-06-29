@@ -1,6 +1,6 @@
 module Spree
   module Aa
-    module ShipmentsHelper
+    module DashboardHelper
     end
   end
 end

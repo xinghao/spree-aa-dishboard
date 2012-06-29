@@ -1,5 +1,5 @@
 Deface::Override.new(:virtual_path => "spree/layouts/admin",
                      :name => "dashboard_admin_tabs",
                      :insert_bottom => "[data-hook='admin_tabs'], #admin_tabs[data-hook]",
-                     :text => "<%= tab(:dashboard, :url => '/admin/dashboard') %>",
+                     :text => "<%= tab(:dashboard, :shipmentmg, :url => '/admin/dashboard') %>",
                      :disabled => false)
