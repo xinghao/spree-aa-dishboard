@@ -22,6 +22,8 @@ class Spree::Aa::ShipmentmgController < Spree::Admin::BaseController
     end
   end
   
+  def upload_overview
+  end
   
   def export_to_csv
     filename = "shipments-"+Time.now.strftime("%Y%m%d%H%M%S")+".csv"

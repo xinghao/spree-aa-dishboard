@@ -1,0 +1,13 @@
+<h4>New Manifest File</h4>
+<%= form_for "", :html => { :multipart => true } do |f| %>
+  <table class="basic-table">
+    <tr data-hook="file">
+      <td><%= t(:filename) %>:</td>
+      <td><%= f.file_field :attachment %></td>
+    </tr>
+  </table>
+  <p class="form-buttons" data-hook="buttons">
+    <%= button "upload" %>
+  </p>
+<% end %>
+
