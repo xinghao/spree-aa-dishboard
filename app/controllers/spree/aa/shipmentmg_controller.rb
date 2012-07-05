@@ -47,7 +47,7 @@ class Spree::Aa::ShipmentmgController < Spree::Admin::BaseController
     orders = Spree::Order.includes(:ship_address, :inventory_units, :line_items, :user).where("state = 'complete' and shipment_state != 'shipped'").order("completed_at asc").all
     
     csv_string = CSV.generate do |csv|
-      csv << ["order number", "date", "payment_state", "shipment_state", "name", "email", "street address", "suburb", "state", "postcode", "phone", "products"]
+      csv << ["order number", "date", "payment_state", "shipment_state", "first name", "last name", "email", "street address", "suburb", "state", "postcode", "phone", "products", "multi products"]
       
       orders.each do |order|
         address1 = order.ship_address.address1
@@ -62,8 +62,10 @@ class Spree::Aa::ShipmentmgController < Spree::Admin::BaseController
             products += ", " + unit["name"] + "(" + unit["quantity"].to_s + ")"
           end
         end
+        multi_products = ""
+        multi_products = "true" if rtHash.size > 1
         address1 = address1 + " " + address2 if !address2.nil? && address2.size > 0        
-        csv << [order.number, order.completed_at, order.payment_state, order.shipment_state, order.ship_address.full_name, order.user.email, address1, order.ship_address.city, order.ship_address.state_text, order.ship_address.zipcode, order.ship_address.phone, products]  
+        csv << [order.number, order.completed_at, order.payment_state, order.shipment_state, order.ship_address.firstname,order.ship_address.lastname, order.user.email, address1, order.ship_address.city, order.ship_address.state_text, order.ship_address.zipcode, order.ship_address.phone, products, multi_products]  
       end
     end 
     
