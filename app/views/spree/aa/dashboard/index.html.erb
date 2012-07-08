@@ -1,13 +1,43 @@
 
 <h3>Pending Orders</h3>
-building.......
+
+<table class="index">
+  <thead>
+    <tr>
+      <th>Order Number</th>
+      <th>Completed at</th>
+      <th>Payment State</th>
+      <th>Shipments State</th>
+      <th>Total</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @orders.each do |o| %>
+      <tr>
+        <td><%= link_to o.number, admin_order_path(o) %></td>
+        <td><%=o.completed_at%></td>
+        <td><%=o.payment_state%></td>
+        <td><%=o.shipment_state%></td>
+        <td><%=o.total%></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
 <br />
 <br />
 <br />
 
 <h3>Export Available Shipping Info</h3>
-<%= link_to "Preview & export", "/admin/dashboard/shipmentmg/preview" %><br /><br />
+<!-- <%= link_to "Preview & export", "/admin/dashboard/shipmentmg/preview" %><br /><br /> -->
+Preview & export<br /><br />
 Upload Manifest
+
+<br />
+<br />
+<br />
+<h3>Sales Reports</h3>
+<%= link_to "Export to CSV", "/admin/dashboard/ordermg/export_to_csv" %><br /><br />
 
 <br />
 <br />
