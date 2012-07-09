@@ -44,12 +44,12 @@ class Spree::Aa::ShipmentmgController < Spree::Admin::BaseController
   
   def old_orders
     filename = "old-orders.csv"
-    orders = Spree::Order.includes(:ship_address, :inventory_units, :line_items, :user).where("state = 'complete' and shipment_state != 'shipped'").order("completed_at asc").all
+    
     
     csv_string = CSV.generate do |csv|
       csv << ["order number", "date", "payment_state", "shipment_state", "first name", "last name", "email", "address1", "address2", "suburb", "state", "postcode", "phone", "products", "multi products"]
       
-      orders.each do |order|
+      Spree::Order.includes(:ship_address, :inventory_units, :line_items, :user).where("state = 'complete' and shipment_state != 'shipped'").order("completed_at asc").find_each(:batch_size => 1000) do |order|
         address1 = order.ship_address.address1
         address2 = order.ship_address.address2
         rtHash = order.shipments.first.group_not_shipped_inventory_units
