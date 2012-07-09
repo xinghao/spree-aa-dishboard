@@ -42,8 +42,53 @@ class Spree::Aa::ShipmentmgController < Spree::Admin::BaseController
           :disposition => "attachment; filename=#{filename}" 
   end
   
-  def old_orders
-    filename = "old-orders.csv"
+  # only work for shipped_orders and all_orders
+  def export_orders_to_csv(filename, select)
+    csv_string = CSV.generate do |csv|
+      csv << ["order number", "date", "payment_state", "shipment_state", "first name", "last name", "email", "address1", "address2", "suburb", "state", "postcode", "phone", "products", "multi products"]
+      
+      select.order("completed_at asc").find_each(:batch_size => 1000) do |order|
+        if (!order.is_test_email?)
+          address1 = order.ship_address.address1
+          address2 = order.ship_address.address2
+          rtHash = order.shipments.first.group_all_inventory_units  ## important
+          
+          products = ""        
+          rtHash.each_pair do |key, unit| 
+            if products.size == 0
+              products =  unit["name"] + "(" + unit["quantity"].to_s + ")"
+            else
+              products += ", " + unit["name"] + "(" + unit["quantity"].to_s + ")"
+            end
+          end
+          multi_products = ""
+          multi_products = "true" if rtHash.size > 1
+          address1 = address1 + " " + address2 if !address2.nil? && address2.size > 0        
+          csv << [order.number, order.completed_at, order.payment_state, order.shipment_state, order.ship_address.firstname,order.ship_address.lastname, order.user.email, order.ship_address.address1, order.ship_address.address2, order.ship_address.city, order.ship_address.state_text, order.ship_address.zipcode, order.ship_address.phone, products, multi_products]
+        end  
+      end
+    end 
+    
+    send_data csv_string, 
+          :type => 'text/csv; charset=iso-8859-1; header=present', 
+          :disposition => "attachment; filename=#{filename}"            
+  end
+  
+  def all_orders 
+    filename = "all-orders.csv"
+    select = Spree::Order.includes(:ship_address, :inventory_units, :line_items, :user).where("state = 'complete' and shipment_state = 'shipped'");
+    export_orders_to_csv(filename, select)        
+  end
+  
+  # does not include paritial shipped orders
+  def shipped_orders
+    filename = "shipped-orders.csv"
+    select = Spree::Order.includes(:ship_address, :inventory_units, :line_items, :user).where("state = 'complete' and shipment_state = 'shipped'");
+    export_orders_to_csv(filename, select)    
+  end
+  
+  def unshipped_orders
+    filename = "unshipped-orders.csv"
     
     
     csv_string = CSV.generate do |csv|
@@ -52,7 +97,7 @@ class Spree::Aa::ShipmentmgController < Spree::Admin::BaseController
       Spree::Order.includes(:ship_address, :inventory_units, :line_items, :user).where("state = 'complete' and shipment_state != 'shipped'").order("completed_at asc").find_each(:batch_size => 1000) do |order|
         address1 = order.ship_address.address1
         address2 = order.ship_address.address2
-        rtHash = order.shipments.first.group_not_shipped_inventory_units
+        rtHash = order.shipments.first.group_not_shipped_inventory_units   # <--- difference is here
         
         products = ""        
         rtHash.each_pair do |key, unit| 
