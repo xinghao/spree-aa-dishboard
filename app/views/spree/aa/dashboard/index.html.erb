@@ -52,6 +52,8 @@ Backorder allowed: <%=Spree::Config[:allow_backorders].to_s%>
       <th>Stock</th>
       <th>On Hand</th>
       <th>Backorder Amount Limit</th>
+      <th>Actual Weight</th>
+      <th>Market Weight</th>            
     </tr>
   </thead>
   <tbody>
@@ -69,6 +71,8 @@ Backorder allowed: <%=Spree::Config[:allow_backorders].to_s%>
         </td>
         <td><%=p.on_hand.to_s %></td>
         <td><%=p.amount_allow_backordered.to_s %></td>
+        <td><%=p.actual_weight %></td>
+        <td><%=p.weight %></td>
       </tr>
     <% end %>
   </tbody>
