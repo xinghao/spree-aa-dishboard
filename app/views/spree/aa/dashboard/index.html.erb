@@ -6,6 +6,7 @@
     <tr>
       <th>Order Number</th>
       <th>Completed at</th>
+      <th>State</th>
       <th>Payment State</th>
       <th>Shipments State</th>
       <th>Total</th>
@@ -16,6 +17,7 @@
       <tr>
         <td><%= link_to o.number, admin_order_path(o) %></td>
         <td><%=o.completed_at%></td>
+        <td><%=o.state%></td>
         <td><%=o.payment_state%></td>
         <td><%=o.shipment_state%></td>
         <td><%=o.total%></td>
@@ -30,7 +32,7 @@
 
 <h3>Shipment Reports</h3>
 <%= link_to "Unshipped orders", "/admin/dashboard/shipmentmg/preview" %><br /><br />
-Upload Manifest<br /><br />
+<%= link_to "Upload Manifest", new_admin_shipment_manifest_url %><br /><br />
 <%= link_to "Shipped orders (csv)", "/admin/dashboard/shipmentmg/shipped_orders" %>
 
 <br />
