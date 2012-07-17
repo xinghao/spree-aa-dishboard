@@ -32,13 +32,14 @@
 
 <h3>Shipment Reports</h3>
 <%= link_to "Unshipped orders", "/admin/dashboard/shipmentmg/preview" %><br /><br />
-Upload Manifest<br /><br />
+<%= link_to "Upload Manifest", new_admin_shipment_manifest_url %><br /><br />
 <%= link_to "Shipped orders (csv)", "/admin/dashboard/shipmentmg/shipped_orders" %>
 
 <br />
 <br />
 <br />
 <h3>Sales Reports</h3>
+<%= link_to "Product Overview", "/admin/dashboard/stats/product_overview" %><br /><br />
 <%= link_to "Export all paid orders to CSV", "/admin/dashboard/ordermg/export_to_csv" %><br /><br />
 
 <br />

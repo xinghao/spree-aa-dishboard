@@ -1,0 +1,41 @@
+
+<h3>Product Overview</h3>
+
+
+Backorder allowed: <%=Spree::Config[:allow_backorders].to_s%>
+<table class="index">
+  <thead>
+    <tr>
+      <th>Product Name</th>
+      <th>Total sold</th>
+      <th>shipped</tn>
+      <th>backordered</th>
+      <th>waiting for shipment</th>
+      <th>Stock</th>
+      <th>On Hand</th>
+      <th>Backorder Amount Limit</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @products.each do |p| %>
+      <tr>
+        <td><%= link_to p.name, admin_product_path(p) %></td>
+        <td><%=@stats[p.id]["total"]%></td>
+        <td><%=@stats[p.id]["shipped"]%></td>
+        <td><%=@stats[p.id]["backordered"]%></td>
+        <td><%=@stats[p.id]["sold"]%></td>        
+        <td>
+          <% if !p.purchasable? %>
+            Out of Stock
+          <% elsif p.on_hand <= 0 %>
+            Backordered
+          <% else %>
+            In Stock
+          <% end %>
+        </td>
+        <td><%=p.on_hand.to_s %></td>
+        <td><%=p.amount_allow_backordered.to_s %></td>
+      </tr>
+    <% end %>
+  </tbody>
+ </table>
