@@ -7,8 +7,24 @@
   <br class="clear" />
 </div>
 <h3>Shipments CSV Overview</h3>
+<h4>From <%=@start_from%></h4> 
+<h4>To <%=@end_to%> </h4>
 <h4>Total Order involved: <%=@display_hash.size%></h4>
 <h4>Total Products needs to be send: <%=@total_send_products%></h4>
+<table class="index" width="50%">
+  <thead>
+    <th>Product</th>
+    <th>Total</th>    
+  </thead>
+  <tbody>
+    <% @product_overview.each_pair do |key, value|%>
+      <tr>
+        <td><%=Spree::Variant.find(key).name%></td>
+        <td><%=value%></td> 
+      </tr>     
+    <% end %>
+  </tbody>
+</table>
 <p>
 Notes: <br />
 This new system only work for the orders puchased after 28th June 2012 <br/>

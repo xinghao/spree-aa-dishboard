@@ -13,17 +13,52 @@ class Spree::Aa::ShipmentmgController < Spree::Admin::BaseController
     #     @display_hash[order.id] = {"preview_object" => ShipmentPreviewObject.build_from_order(order), "order" => order}
     #   end 
     # end
-    @display_hash = ShipmentPreviewObject.build_display_data   
+    @start_from = params[:start]
+    @end_to = params[:end]
+    
+    if !params[:start].blank?
+      begin
+       @start_from = DateTime.strptime(params[:start], '%Y-%m-%d').to_time
+      rescue
+       @start_from = nil
+      end
+    end
+    
+    if !params[:end].blank?
+      begin
+       @end_to = DateTime.strptime(params[:end], '%Y-%m-%d').to_time + 1.day
+      rescue
+       @end_to = nil
+      end
+    else
+      @end_to = DateTime.strptime(Date.today.to_s, '%Y-%m-%d').to_time
+    end
+    
+        
+    @display_hash = ShipmentPreviewObject.build_display_data(@start_from, @end_to)  
   end
   
   def preview
     @total_send_products = 0
+    @product_overview = Hash.new
     @display_hash.each_pair do |order_id,value|
       order = value["order"]
       @total_send_products += order.inventory_units.where("state = ?", "sold").count
-    end
+      @product_overview = hash_sum(@product_overview, value["preview_object"].get_categorized_inventory["sold"])
+    end        
   end
   
+  def hash_sum(hash_a, hash_b)
+    hash_b.each_pair do |key, value|
+      if hash_a.include?(key)
+        hash_a[key] += value
+      else
+        hash_a[key] = value 
+      end
+    end
+    return hash_a;
+  end
+        
   def upload_overview
   end
   
