@@ -1,0 +1,51 @@
+
+<h3>Sales Overview</h3>
+
+<%= render :partial => 'date_range_form' %>
+
+<br />
+<br />
+<br />
+<br />
+
+<table class="index">
+  <thead>
+    <tr>
+      <th>Date</th>
+      <th>Total Orders</th>
+      <th>Total Products</th>
+      <th>Total Revenue</th>
+      <th>Total Paid</tn>
+      <th>Total Shipping Fee</tn>
+    </tr>
+  </thead>
+  <tbody>
+    <% @sales.each do |sale| %>
+      <tr>
+      <td><%= sale.date %></td>
+      <td><%= sale.orders.size %></td>
+      <td><%= sale.product_total %></td>
+      <td><%= sale.total_revenue %></td>
+      <td><%= sale.total_paid %></td>
+      <td><%= sale.ship_total %></td>
+      </tr>
+    <% end %>
+  </tbody>
+ </table>
+
+
+<h4>Total Products: <%=@total_products%></h4>
+<table class="index" width="50%">
+  <thead>
+    <th>Product</th>
+    <th>Total</th>    
+  </thead>
+  <tbody>
+    <% @sales_products.each_pair do |key, value|%>
+      <tr>
+        <td><%=Spree::Variant.find(key).name%></td>
+        <td><%=value%></td> 
+      </tr>     
+    <% end %>
+  </tbody>
+</table>

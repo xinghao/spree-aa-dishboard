@@ -1,4 +1,46 @@
 class Spree::Aa::StatsController < Spree::Admin::BaseController
+  before_filter :load_date_range, :only => [:sales_overview]
+  
+  def sales_overview
+    @search_url = "/admin/dashboard/stats/sales_overview"; 
+    @sales = Array.new
+    @sales_products = Hash.new
+    @total_products = 0;
+    @start_from.to_date.upto(@end_to.to_date) do |day|
+      day_sale = DailySales.new(day)
+      @sales.push day_sale
+      @total_products += day_sale.product_total
+      @sales_products = DailySales.hash_sum(@sales_products, day_sale.product_hash)
+    end
+    
+  end
+  
+  
+  def load_date_range
+    @start_from = params[:start]
+    @end_to = params[:end]
+    
+    if !params[:start].blank?
+      begin
+       @start_from = DateTime.strptime(params[:start], '%Y/%m/%d').to_time
+      rescue
+       @start_from = nil
+      end
+    end
+    
+    if !params[:end].blank?
+      begin
+       @end_to = DateTime.strptime(params[:end], '%Y/%m/%d').to_time
+      rescue
+       @end_to = nil
+      end
+    else
+      @end_to = Date.today.strftime('%Y/%m/%d').to_time
+    end    
+    
+    @start_from = @end_to if @start_from.nil?
+  end
+  
   
   def product_overview
     pp = Spree::Property.find_by_name("popularity");
