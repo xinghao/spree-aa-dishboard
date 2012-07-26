@@ -8,6 +8,8 @@
 <br />
 <br />
 
+<h4>Total Revenue: <%=@revenue_total%></h4>
+<h4>Average Revenue per Day: <%=@average_revenue%></h4>
 <table class="index">
   <thead>
     <tr>
@@ -16,7 +18,7 @@
       <th>Total Products</th>
       <th>Total Revenue</th>
       <th>Total Paid</tn>
-      <th>Total Shipping Fee</tn>
+      <th>Total Product Revenue</tn>
     </tr>
   </thead>
   <tbody>
@@ -27,7 +29,7 @@
       <td><%= sale.product_total %></td>
       <td><%= sale.total_revenue %></td>
       <td><%= sale.total_paid %></td>
-      <td><%= sale.ship_total %></td>
+      <td><%= sale.item_total_revenue %></td>
       </tr>
     <% end %>
   </tbody>

@@ -2,7 +2,7 @@
 Gem::Specification.new do |s|
   s.platform    = Gem::Platform::RUBY
   s.name        = 'spree_aa_dishboard'
-  s.version     = '0.1.9'
+  s.version     = '0.2.0'
   s.summary     = 'spree airarnea dishboard'
   s.description = 'spree airarnea dishboard'
   s.required_ruby_version = '>= 1.8.7'

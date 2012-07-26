@@ -1,13 +1,12 @@
 class DailySales
-  attr_accessor :date, :orders, :total_revenue, :total_paid, :item_total_revenue, :ship_total, :product_total, :product_hash 
+  attr_accessor :date, :orders, :total_revenue, :total_paid, :item_total_revenue, :product_total, :product_hash 
   
   def initialize(date)
     @date = date
-    @orders = Spree::Order.includes(:inventory_units).where("state = 'complete' and completed_at >= ? and completed_at < ?", @date, @date + 1.day).all
+    @orders = Spree::Order.includes(:inventory_units, :payments).where("state = 'complete' and completed_at >= ? and completed_at < ?", @date, @date + 1.day)
     @total_revenue = 0;
     @total_paid = 0;
     @item_total_revenue = 0;
-    @ship_total = 0;
     @product_total = 0;
     @product_hash = Hash.new;
     
@@ -15,11 +14,11 @@ class DailySales
   end
 
   def build_report(orders)
-    orders.each do |order|
+    orders.find_each(:batch_size => 500) do |order|
       @total_revenue += order.total
       @item_total_revenue += order.item_total
-      @ship_total += order.ship_total
-      order.payments do |payment|
+      order.payments.each do |payment|
+        #Rails.logger.info("FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF, #{payment.id}: #{payment.amount.to_s}, #{payment.state}")
         @total_paid += payment.amount if payment.state == "completed"    
       end    
       

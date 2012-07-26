@@ -6,12 +6,23 @@ class Spree::Aa::StatsController < Spree::Admin::BaseController
     @sales = Array.new
     @sales_products = Hash.new
     @total_products = 0;
+    @revenue_total = 0;
+    @average_revenue = 0;
+    icount = 0;
     @start_from.to_date.upto(@end_to.to_date) do |day|
+      icount += 1;
       day_sale = DailySales.new(day)
       @sales.push day_sale
+      @revenue_total += day_sale.total_revenue
       @total_products += day_sale.product_total
       @sales_products = DailySales.hash_sum(@sales_products, day_sale.product_hash)
     end
+    if icount > 0
+      @average_revenue = @revenue_total * 1.0 /icount
+    else
+      @average_revenue = @revenue_total
+    end
+    
     
   end
   
