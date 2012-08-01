@@ -24,7 +24,7 @@ class DailySales
       
       order.inventory_units.each do |iu|
         @product_total += 1;
-        if @product_hash.include?(iu.variant_id)
+        if @product_hash.has_key?(iu.variant_id)
           @product_hash[iu.variant_id] += 1;
         else
           @product_hash[iu.variant_id] = 1;
@@ -37,7 +37,7 @@ class DailySales
 
   def self.hash_sum(hash_a, hash_b)
     hash_b.each_pair do |key, value|
-      if hash_a.include?(key)
+      if hash_a.has_key?(key)
         hash_a[key] += value
       else
         hash_a[key] = value 
