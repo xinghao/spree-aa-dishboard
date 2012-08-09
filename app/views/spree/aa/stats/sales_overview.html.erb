@@ -8,6 +8,7 @@
 <br />
 <br />
 
+<h4>Total Orders: <%=@total_orders%></h4>
 <h4>Total Revenue: <%=@revenue_total%></h4>
 <h4>Average Revenue per Day: <%=@average_revenue%></h4>
 <table class="index">
@@ -36,17 +37,46 @@
  </table>
 
 
+<br />
+<br />
+<h4>Total Payments: <%=@payment_total%></h4>
+<table class="index">
+  <thead>
+    <tr>
+      <th>Payment Method</th>
+      <th>Transactions</th>
+      <th>Percentage</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @payment_menthod_hash.each_pair do |method, amount| %>
+      <% if amount > 0 %>
+        <tr>
+        <td><%=method %></td>
+        <td><%=amount %></td>
+        <td><%=(amount * 1.0 / @payment_total).round(2) * 100 %>%</td>
+        </tr>
+      <% end %>
+    <% end %>
+  </tbody>
+ </table>
+
+
+<br />
+<br />
 <h4>Total Products: <%=@total_products%></h4>
 <table class="index" width="50%">
   <thead>
     <th>Product</th>
+    <th>Revenue</th>
     <th>Total</th>    
   </thead>
   <tbody>
-    <% @sales_products.each_pair do |key, value|%>
+    <% @sales_products_array.each do |array|%>
       <tr>
-        <td><%=Spree::Variant.find(key).name%></td>
-        <td><%=value%></td> 
+        <td><%=Spree::Variant.find(array[0]).name%></td>
+        <td><%=Spree::Variant.find(array[0]).price * array[1]%></td>
+        <td><%=array[1]%></td> 
       </tr>     
     <% end %>
   </tbody>

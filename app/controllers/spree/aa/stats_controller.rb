@@ -6,8 +6,11 @@ class Spree::Aa::StatsController < Spree::Admin::BaseController
     @sales = Array.new
     @sales_products = Hash.new
     @total_products = 0;
+    @total_orders = 0
     @revenue_total = 0;
     @average_revenue = 0;
+    @payment_total = 0;
+    @payment_menthod_hash = Hash.new;
     icount = 0;
     @start_from.to_date.upto(@end_to.to_date) do |day|
       icount += 1;
@@ -15,10 +18,15 @@ class Spree::Aa::StatsController < Spree::Admin::BaseController
       @sales.push day_sale
       @revenue_total += day_sale.total_revenue
       @total_products += day_sale.product_total
+      @total_orders += day_sale.orders.size
       @sales_products = DailySales.hash_sum(@sales_products, day_sale.product_hash)
+      @payment_total += day_sale.payment_method_total
+      @payment_menthod_hash = DailySales.hash_sum(@payment_menthod_hash, day_sale.payment_method_hash);
     end
+    @sales_products_array = @sales_products.sort {|a,b| b[1]<=>a[1]}
+    
     if icount > 0
-      @average_revenue = @revenue_total * 1.0 /icount
+      @average_revenue = (@revenue_total * 1.0 /icount).round(2)
     else
       @average_revenue = @revenue_total
     end
