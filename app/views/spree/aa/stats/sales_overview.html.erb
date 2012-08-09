@@ -44,17 +44,22 @@
   <thead>
     <tr>
       <th>Payment Method</th>
-      <th>Transactions</th>
-      <th>Percentage</th>
+      <th>Transactions Number</th>
+      <th>Transactions Number Percentage</th>
+      <th>Revenue</th>
+      <th>Revenue Number Percentage</th>
+      
     </tr>
   </thead>
   <tbody>
     <% @payment_menthod_hash.each_pair do |method, amount| %>
-      <% if amount > 0 %>
+      <% if amount > 0 && !method.include?("Revenue") %>
         <tr>
         <td><%=method %></td>
         <td><%=amount %></td>
         <td><%=(amount * 1.0 / @payment_total).round(2) * 100 %>%</td>
+        <td><%=@payment_menthod_hash["#{method} Revenue"] %></td>
+        <td><%=(@payment_menthod_hash["#{method} Revenue"] * 1.0 / @revenue_total).round(2) * 100 %>%</td>        
         </tr>
       <% end %>
     <% end %>

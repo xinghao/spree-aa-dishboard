@@ -9,7 +9,7 @@ class DailySales
     @item_total_revenue = 0;
     @product_total = 0;
     @product_hash = Hash.new;
-    @payment_method_hash = {"Paypal Express" => 0, "Eway" => 0, "Other" => 0};
+    @payment_method_hash = {"Paypal Express" => 0, "Eway" => 0, "Other" => 0, "Paypal Express Revenue" => 0, "Eway Revenue" => 0, "Other Revenue" => 0};
     @payment_method_total = 0;
     
     build_report(@orders)    
@@ -44,10 +44,13 @@ class DailySales
   def increase_payment_method(payment)
     if payment.source_type == "Spree::Creditcard"
       @payment_method_hash["Eway"] += 1 
+      @payment_method_hash["Eway Revenue"] += payment.amount
     elsif payment.source_type == "Spree::PaypalAccount"
       @payment_method_hash["Paypal Express"] += 1
+      @payment_method_hash["Paypal Express Revenue"] += payment.amount
     else
       @payment_method_hash["Other"] += 1
+      @payment_method_hash["Other Revenue"] += payment.amount
     end
   end
   
