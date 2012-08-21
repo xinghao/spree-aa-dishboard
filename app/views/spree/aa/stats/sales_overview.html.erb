@@ -79,7 +79,7 @@
   <tbody>
     <% @sales_products_array.each do |array|%>
       <tr>
-        <td><%=Spree::Variant.find(array[0]).name%></td>
+        <td><%=Spree::Variant.find(array[0]).name_with_options_text%></td>
         <td><%=Spree::Variant.find(array[0]).price * array[1]%></td>
         <td><%=array[1]%></td> 
       </tr>     
