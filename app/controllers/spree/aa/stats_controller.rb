@@ -76,7 +76,9 @@ class Spree::Aa::StatsController < Spree::Admin::BaseController
                             } 
      if variant.product.has_variants?
        @stats[variant.id]["allow_backorder"] = variant.backorder_limit
+       @stats[variant.id]["puchase"] = variant.available?
      else
+       @stats[variant.id]["puchase"] = variant.product.purchasable?
        @stats[variant.id]["allow_backorder"] = variant.product.amount_allow_backordered
      end
     end                     

@@ -25,7 +25,7 @@ Backorder allowed: <%=Spree::Config[:allow_backorders].to_s%>
         <td><%=value["backordered"]%></td>
         <td><%=value["sold"]%></td>        
         <td>
-          <% if !value["variant"].available? %>
+          <% if !value["puchase"] %>
             Out of Stock
           <% elsif value["variant"].on_hand <= 0 %>
             Backordered
