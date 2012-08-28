@@ -63,14 +63,22 @@ class Spree::Aa::StatsController < Spree::Admin::BaseController
   
   def product_overview
     pp = Spree::Property.find_by_name("popularity");
-    @products = Spree::Product.includes(:properties).where("spree_product_properties.property_id = ? and deleted_at is null ", pp.id).order("value desc, spree_products.id desc");
+    @variants = Spree::Variant.includes(:product).where("spree_variants.deleted_at is null and spree_products.deleted_at is null").order("spree_products.name asc")
+#    @products = Spree::Product.includes(:properties).where("spree_product_properties.property_id = ? and deleted_at is null ", pp.id).order("value desc, spree_products.id desc");
     @stats = Hash.new
-    @products.each do |product|
-      @stats[product.id] = {"total" => product.master.inventory_units.count, 
-                            "shipped" => product.master.inventory_units.where(:state => "shipped").count,
-                            "sold" => product.master.inventory_units.where(:state => "sold").count,
-                            "backordered" => product.master.inventory_units.where(:state => "backordered").count
-                            }  
+    @variants.each do |variant|
+      next if variant.product.has_variants? && variant.is_master 
+      @stats[variant.id] = {"variant" => variant,
+                            "total" => variant.inventory_units.count, 
+                            "shipped" => variant.inventory_units.where(:state => "shipped").count,
+                            "sold" => variant.inventory_units.where(:state => "sold").count,
+                            "backordered" => variant.inventory_units.where(:state => "backordered").count
+                            } 
+     if variant.product.has_variants?
+       @stats[variant.id]["allow_backorder"] = variant.backorder_limit
+     else
+       @stats[variant.id]["allow_backorder"] = variant.product.amount_allow_backordered
+     end
     end                     
   end
   

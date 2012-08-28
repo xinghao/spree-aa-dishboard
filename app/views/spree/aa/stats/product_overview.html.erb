@@ -17,24 +17,24 @@ Backorder allowed: <%=Spree::Config[:allow_backorders].to_s%>
     </tr>
   </thead>
   <tbody>
-    <% @products.each do |p| %>
+    <% @stats.each_pair do |variant_id, value| %>
       <tr>
-        <td><%= link_to p.name, admin_product_path(p) %></td>
-        <td><%=@stats[p.id]["total"]%></td>
-        <td><%=@stats[p.id]["shipped"]%></td>
-        <td><%=@stats[p.id]["backordered"]%></td>
-        <td><%=@stats[p.id]["sold"]%></td>        
+        <td><%= value["variant"].name_with_options_text%></td>
+        <td><%=value["total"]%></td>
+        <td><%=value["shipped"]%></td>
+        <td><%=value["backordered"]%></td>
+        <td><%=value["sold"]%></td>        
         <td>
-          <% if !p.purchasable? %>
+          <% if !value["variant"].available? %>
             Out of Stock
-          <% elsif p.on_hand <= 0 %>
+          <% elsif value["variant"].on_hand <= 0 %>
             Backordered
           <% else %>
             In Stock
           <% end %>
         </td>
-        <td><%=p.on_hand.to_s %></td>
-        <td><%=p.amount_allow_backordered.to_s %></td>
+        <td><%=value["variant"].on_hand.to_s %></td>
+        <td><%=value["allow_backorder"].to_s %></td>
       </tr>
     <% end %>
   </tbody>
