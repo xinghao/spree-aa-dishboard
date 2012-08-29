@@ -7,6 +7,7 @@ Backorder allowed: <%=Spree::Config[:allow_backorders].to_s%>
   <thead>
     <tr>
       <th>Product Name</th>
+      <th>SKU</th>
       <th>Total sold</th>
       <th>shipped</tn>
       <th>backordered</th>
@@ -20,6 +21,7 @@ Backorder allowed: <%=Spree::Config[:allow_backorders].to_s%>
     <% @stats.each_pair do |variant_id, value| %>
       <tr>
         <td><%= value["variant"].name_with_options_text%></td>
+        <td><%= value["variant"].sku%></td>
         <td><%=value["total"]%></td>
         <td><%=value["shipped"]%></td>
         <td><%=value["backordered"]%></td>
