@@ -19,7 +19,7 @@
   <tbody>
     <% @product_overview.each_pair do |key, value|%>
       <tr>
-        <td><%=Spree::Variant.find(key).name%></td>
+        <td><%=Spree::Variant.find(key).name_with_options_text%></td>
         <td><%=value%></td> 
       </tr>     
     <% end %>

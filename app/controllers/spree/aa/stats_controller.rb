@@ -7,8 +7,10 @@ class Spree::Aa::StatsController < Spree::Admin::BaseController
     @sales_products = Hash.new
     @total_products = 0;
     @total_orders = 0
+    @total_cost = 0
     @revenue_total = 0;
     @average_revenue = 0;
+    @average_net_revenue = 0;
     @payment_total = 0;
     @payment_menthod_hash = Hash.new;
     icount = 0;
@@ -19,6 +21,7 @@ class Spree::Aa::StatsController < Spree::Admin::BaseController
       @revenue_total += day_sale.total_revenue
       @total_products += day_sale.product_total
       @total_orders += day_sale.orders.size
+      @total_cost += day_sale.cost
       @sales_products = DailySales.hash_sum(@sales_products, day_sale.product_hash)
       @payment_total += day_sale.payment_method_total
       @payment_menthod_hash = DailySales.hash_sum(@payment_menthod_hash, day_sale.payment_method_hash);
@@ -27,8 +30,10 @@ class Spree::Aa::StatsController < Spree::Admin::BaseController
     
     if icount > 0
       @average_revenue = (@revenue_total * 1.0 /icount).round(2)
+      @average_net_revenue = ((@revenue_total - @total_cost) * 1.0 /icount).round(2)
     else
       @average_revenue = @revenue_total
+      @average_net_revenue = @revenue_total - @total_cost
     end
     
     

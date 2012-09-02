@@ -1,7 +1,7 @@
 require 'csv'
 
 class Spree::Aa::ShipmentmgController < Spree::Admin::BaseController
-  before_filter :load_data, :only => [:preview, :export_to_csv]
+#  before_filter :load_data, :only => [:preview, :export_to_csv]
   
   
   #{order_id1=>{"prview_object" => prview_object1, "order"=>order1},order_id2=>{"prview_object" => prview_object2, "order"=>order2}}
@@ -16,36 +16,47 @@ class Spree::Aa::ShipmentmgController < Spree::Admin::BaseController
     @start_from = params[:start]
     @end_to = params[:end]
     
-    if !params[:start].blank?
-      begin
-       @start_from = DateTime.strptime(params[:start], '%Y-%m-%d').to_time
-      rescue
-       @start_from = nil
-      end
-    end
-    
-    if !params[:end].blank?
-      begin
-       @end_to = DateTime.strptime(params[:end], '%Y-%m-%d').to_time + 1.day
-      rescue
-       @end_to = nil
-      end
-    else
-      @end_to = DateTime.strptime(Date.today.to_s, '%Y-%m-%d').to_time
-    end
-    
-        
+    # if !params[:start].blank?
+    #   begin
+    #    @start_from = DateTime.strptime(params[:start], '%Y-%m-%d').to_time
+    #   rescue
+    #    @start_from = nil
+    #   end
+    # end
+    # 
+    # if !params[:end].blank?
+    #   begin
+    #    @end_to = DateTime.strptime(params[:end], '%Y-%m-%d').to_time + 1.day
+    #   rescue
+    #    @end_to = nil
+    #   end
+    # else
+    #   @end_to = DateTime.strptime(Date.today.to_s, '%Y-%m-%d').to_time
+    # end
+
+    date_range = ShipmentCommonFunction::get_date_range(params[:start], params[:end])
+    @start_from = data_range["start_from"]
+    @end_to = data_range["end_at"]        
     @display_hash = ShipmentPreviewObject.build_display_data(@start_from, @end_to)  
   end
   
   def preview
-    @total_send_products = 0
-    @product_overview = Hash.new
-    @display_hash.each_pair do |order_id,value|
-      order = value["order"]
-      @total_send_products += order.inventory_units.where("state = ?", "sold").count
-      @product_overview = hash_sum(@product_overview, value["preview_object"].get_categorized_inventory["sold"])
-    end        
+    exalt = ShipInfo::Exalt.new
+    preview_date = exalt.preview(params[:start], params[:end])
+
+    @start_from = preview_date["start_from"]
+    @end_to = preview_date["end_to"]        
+    @display_hash = preview_date["display_hash"]
+    @total_send_products = preview_date["total_send_products"]
+    @product_overview = preview_date["product_overview"]      
+    
+    # @total_send_products = 0
+    # @product_overview = Hash.new
+    # @display_hash.each_pair do |order_id,value|
+    #   order = value["order"]
+    #   @total_send_products += order.inventory_units.where("state = ?", "sold").count
+    #   @product_overview = hash_sum(@product_overview, value["preview_object"].get_categorized_inventory["sold"])
+    # end        
   end
   
   def hash_sum(hash_a, hash_b)

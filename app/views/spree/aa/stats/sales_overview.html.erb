@@ -11,6 +11,9 @@
 <h4>Total Orders: <%=@total_orders%></h4>
 <h4>Total Revenue: <%=@revenue_total%></h4>
 <h4>Average Revenue per Day: <%=@average_revenue%></h4>
+<h4>Net Revenue: <%=@revenue_total - @total_cost%></h4>
+<h4>Average Net Revenue per Day: <%=@average_net_revenue%></h4>
+
 <table class="index">
   <thead>
     <tr>
@@ -18,8 +21,9 @@
       <th>Total Orders</th>
       <th>Total Products</th>
       <th>Total Revenue</th>
-      <th>Total Paid</tn>
-      <th>Total Product Revenue</tn>
+      <th>Total Shipping Revenue</tn>
+      <th>Total Cost</tn>
+      <th>Net Revenue</tn>
     </tr>
   </thead>
   <tbody>
@@ -29,8 +33,9 @@
       <td><%= sale.orders.size %></td>
       <td><%= sale.product_total %></td>
       <td><%= sale.total_revenue %></td>
-      <td><%= sale.total_paid %></td>
-      <td><%= sale.item_total_revenue %></td>
+      <td><%= sale.total_revenue - sale.item_total_revenue %></td>
+      <td><%= sale.cost %></td>
+      <td><%= (sale.total_revenue - sale.cost).round(2) %></td>
       </tr>
     <% end %>
   </tbody>
@@ -73,15 +78,19 @@
 <table class="index" width="50%">
   <thead>
     <th>Product</th>
-    <th>Revenue</th>
-    <th>Total</th>    
+    <th>Total Quantity</th>    
+    <th>Revenue Without Shipping</th>
+    <th>FOB</th>
+    <th>Total Cost</th>        
   </thead>
   <tbody>
     <% @sales_products_array.each do |array|%>
       <tr>
-        <td><%=Spree::Variant.find(array[0]).name_with_options_text%></td>
-        <td><%=Spree::Variant.find(array[0]).price * array[1]%></td>
+        <td><%=Spree::Variant.find(array[0]).name_with_options_text%></td>        
         <td><%=array[1]%></td> 
+        <td><%=Spree::Variant.find(array[0]).price * array[1]%></td>
+        <td><%=Spree::Variant.find(array[0]).product.get_fob * array[1]%></td>
+        <td><%=Spree::Variant.find(array[0]).product.got_total_cost * array[1]%></td>
       </tr>     
     <% end %>
   </tbody>
