@@ -33,8 +33,8 @@
       <td><%= sale.orders.size %></td>
       <td><%= sale.product_total %></td>
       <td><%= sale.total_revenue %></td>
-      <td><%= sale.total_revenue - sale.item_total_revenue %></td>
-      <td><%= sale.cost %></td>
+      <td><%= (sale.total_revenue - sale.item_total_revenue).round(2) %></td>
+      <td><%= sale.cost.round(2) %></td>
       <td><%= (sale.total_revenue - sale.cost).round(2) %></td>
       </tr>
     <% end %>
@@ -79,18 +79,18 @@
   <thead>
     <th>Product</th>
     <th>Total Quantity</th>    
-    <th>Revenue Without Shipping</th>
+    <th>Revenue</th>
     <th>FOB</th>
     <th>Total Cost</th>        
   </thead>
   <tbody>
-    <% @sales_products_array.each do |array|%>
+    <% @sales_products.each_pair do |key,value|%>
       <tr>
-        <td><%=Spree::Variant.find(array[0]).name_with_options_text%></td>        
-        <td><%=array[1]%></td> 
-        <td><%=Spree::Variant.find(array[0]).price * array[1]%></td>
-        <td><%=Spree::Variant.find(array[0]).product.get_fob * array[1]%></td>
-        <td><%=Spree::Variant.find(array[0]).product.got_total_cost * array[1]%></td>
+        <td><%=Spree::Variant.find(key).name_with_options_text%></td>        
+        <td><%=value[:quantity]%></td> 
+        <td><%=value[:revenue].to_f.round(2)%></td>
+        <td><%=(Spree::Variant.find(key).product.get_fob * value[:quantity]).round(2)%></td>
+        <td><%=(Spree::Variant.find(key).product.got_total_cost * value[:quantity]).round(2)%></td>
       </tr>     
     <% end %>
   </tbody>

@@ -29,13 +29,21 @@ class DailySales
         end    
       end    
       
+      ship_fee_per_dollar = (order.total - order.item_total) * 1.0 / order.item_total
+      
       order.inventory_units.each do |iu|
         @product_total += 1;
         @cost += iu.variant.product.got_total_cost
-        if @product_hash.has_key?(iu.variant_id)
-          @product_hash[iu.variant_id] += 1;
+        if order.inventory_units.size > 1
+          ship_cost = iu.variant.price * ship_fee_per_dollar;
         else
-          @product_hash[iu.variant_id] = 1;
+          ship_cost = order.total - order.item_total
+        end 
+        if @product_hash.has_key?(iu.variant_id)
+          @product_hash[iu.variant_id][:quantity] += 1;
+          @product_hash[iu.variant_id][:revenue] += ship_cost + iu.variant.price;
+        else
+          @product_hash[iu.variant_id] = {:quantity => 1, :revenue => ship_cost + iu.variant.price};
         end
       end
       
@@ -56,8 +64,9 @@ class DailySales
     end
   end
   
-  def self.hash_sum(hash_a, hash_b)
+  def self.hash_sum_simple(hash_a, hash_b)
     hash_b.each_pair do |key, value|
+     
       if hash_a.has_key?(key)
         hash_a[key] += value
       else
@@ -66,5 +75,19 @@ class DailySales
     end
     return hash_a;
   end
+
+  def self.hash_sum(hash_a, hash_b)
+    hash_b.each_pair do |key, value|
+      Rails.logger.info("FFFFFFFFFFFFFFFFFFFFFFFFFFFFFF" + key.to_s)
+      if hash_a.has_key?(key)
+        hash_a[key][:quantity] += value[:quantity]
+        hash_a[key][:revenue] += value[:revenue]
+      else
+        hash_a[key] = value 
+      end
+    end
+    return hash_a;
+  end
+
 
 end

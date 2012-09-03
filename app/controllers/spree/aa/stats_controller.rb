@@ -24,9 +24,11 @@ class Spree::Aa::StatsController < Spree::Admin::BaseController
       @total_cost += day_sale.cost
       @sales_products = DailySales.hash_sum(@sales_products, day_sale.product_hash)
       @payment_total += day_sale.payment_method_total
-      @payment_menthod_hash = DailySales.hash_sum(@payment_menthod_hash, day_sale.payment_method_hash);
+      @payment_menthod_hash = DailySales.hash_sum_simple(@payment_menthod_hash, day_sale.payment_method_hash);
     end
-    @sales_products_array = @sales_products.sort {|a,b| b[1]<=>a[1]}
+    
+    #@sales_products_array = @sales_products.sort {|a,b| b[1]<=>a[1]}
+    @sales_products_array = @sales_products
     
     if icount > 0
       @average_revenue = (@revenue_total * 1.0 /icount).round(2)
