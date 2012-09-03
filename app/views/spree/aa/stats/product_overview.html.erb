@@ -15,6 +15,7 @@ Backorder allowed: <%=Spree::Config[:allow_backorders].to_s%>
       <th>Stock</th>
       <th>On Hand</th>
       <th>Backorder Amount Limit</th>
+      <th>Expected Warehouse Stock</th>
     </tr>
   </thead>
   <tbody>
@@ -37,6 +38,7 @@ Backorder allowed: <%=Spree::Config[:allow_backorders].to_s%>
         </td>
         <td><%=value["variant"].on_hand.to_s %></td>
         <td><%=value["allow_backorder"].to_s %></td>
+        <td><font color="gold"><%=value["sold"] +  value["variant"].on_hand.abs %></font></td>
       </tr>
     <% end %>
   </tbody>
