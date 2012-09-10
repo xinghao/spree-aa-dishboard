@@ -164,4 +164,24 @@ class Spree::Aa::ShipmentmgController < Spree::Admin::BaseController
           :type => 'text/csv; charset=iso-8859-1; header=present', 
           :disposition => "attachment; filename=#{filename}"        
   end
+  
+  def orders_in_warehouse()
+    @exalt_warehouse_states = ExaltWarehouseState.where("state = ? or state = ? or state = ?", ExaltWarehouseState::RECEIVED, ExaltWarehouseState::PENDING , ExaltWarehouseState::PRCESSED);
+    @processed_total = 0;
+    @reveived_total = 0;
+    @pending_total = 0;
+    @other_total = 0;
+    @exalt_warehouse_states.each do |ews|
+      if ews.state == ExaltWarehouseState::RECEIVED
+        @reveived_total += 1
+      elsif ews.state == ExaltWarehouseState::PENDING
+        @pending_total += 1
+      elsif ews.state == ExaltWarehouseState::PRCESSED
+        @processed_total += 1
+      else
+        @other_total += 1
+      end
+        
+    end
+  end
 end

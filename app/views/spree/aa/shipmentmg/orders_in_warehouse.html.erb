@@ -1,0 +1,36 @@
+<h3>Orders in Warehouse</h3>
+<h4>Total Entry involved: <%=@exalt_warehouse_states.size%></h4>
+<h4>Total Received: <%=@reveived_total%></h4>
+<h4>Total Processed: <%=@processed_total%></h4>
+<h4>Total Pending: <%=@pending_total%></h4>
+<h4>Total other: <%=@other_total%></h4>
+<table class="index" width="80%">
+  <thead>
+    <th>Id</th>
+    <th>Order Id</th>
+    <th>Reference1</th>
+    <th>Reference2</th>
+    <th>Reference3</th>
+    <th>State</th>
+    <th>Created_at</th>
+    <th>Updated_at</th>    
+  </thead>
+  <tbody>
+    <% @exalt_warehouse_states.each do |ews|%>
+      <tr>
+        <td><%=ews.id%></td>
+        <td><%=ews.order_id%></td>
+        <td><%=ews.reference1%></td>
+        <td><%=ews.reference2%></td>
+        <td><%=ews.reference3%></td>
+        <% if ews.state == ExaltWarehouseState::RECEIVED %>
+          <td><font color="red"><%=ews.state%></td></font>
+        <% else %>
+          <td><%=ews.state%></td>
+        <% end %>
+        <td><%=ews.created_at%></td>
+        <td><%=ews.updated_at%></td>
+      </tr>     
+    <% end %>
+  </tbody>
+</table>
