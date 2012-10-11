@@ -9,6 +9,7 @@ Spree::Core::Engine.routes.draw do
   match 'admin/dashboard/shipmentmg/all_orders' => 'Aa::Shipmentmg#all_orders'
   
   match '/admin/dashboard/ordermg/export_to_csv' => 'Aa::Ordermg#export_to_csv'
+  match '/admin/dashboard/ordermg/canceled' => 'Aa::Ordermg#canceled'
   
   match '/admin/dashboard/stats/product_overview' => 'Aa::Stats#product_overview'
   match '/admin/dashboard/stats/sales_overview' => 'Aa::Stats#sales_overview'

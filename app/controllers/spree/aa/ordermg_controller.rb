@@ -2,7 +2,11 @@ require 'csv'
 
 class Spree::Aa::OrdermgController < Spree::Admin::BaseController
   
-    
+  def canceled
+    @orders = Spree::Order.where("state = 'canceled'").order("completed_at asc").all
+  end
+  
+  
   def export_to_csv
     filename = "orders-"+Time.now.strftime("%Y%m%d%H%M%S")+".csv"
     # headers.merge!({
