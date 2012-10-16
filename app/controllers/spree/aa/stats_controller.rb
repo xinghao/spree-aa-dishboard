@@ -42,30 +42,7 @@ class Spree::Aa::StatsController < Spree::Admin::BaseController
   end
   
   
-  def load_date_range
-    @start_from = params[:start]
-    @end_to = params[:end]
-    
-    if !params[:start].blank?
-      begin
-       @start_from = DateTime.strptime(params[:start], '%Y/%m/%d').to_time
-      rescue
-       @start_from = nil
-      end
-    end
-    
-    if !params[:end].blank?
-      begin
-       @end_to = DateTime.strptime(params[:end], '%Y/%m/%d').to_time
-      rescue
-       @end_to = nil
-      end
-    else
-      @end_to = Date.today.strftime('%Y/%m/%d').to_time
-    end    
-    
-    @start_from = @end_to if @start_from.nil?
-  end
+
   
   
   def product_overview
