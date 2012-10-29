@@ -1,0 +1,38 @@
+
+<h3>Return Overview</h3>
+
+<%= render :partial => 'date_range_form' %>
+
+<br />
+<br />
+<br />
+<br />
+
+
+
+<table class="index">
+  <thead>
+    <tr>
+      <th>RMA</th>
+      <th>Order</th>
+      <th>Purchased Quantity</th>
+      <th>Returned Quantity</th>
+      <th>Returned_at</th>
+      <th>Purchased_at</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @returns.each do |r| %>
+      <tr>
+      <% rma = Spree::ReturnAuthorization.find r.return_authorization_id %>
+      <td><%= rma.number %></td>
+      <td><%= link_to rma.order.number, admin_order_path(rma.order) %></td>
+      <td><%=Spree::InventoryUnit.where("variant_id = ? and order_id = ?", @variant_id, rma.order.id).size%></td>
+      <td><%=r.amount%></td>
+      <td><%=rma.updated_at%></td>
+      <td><%= rma.order.completed_at%></td>
+      </tr>
+    <% end %>
+  </tbody>
+ </table>
+

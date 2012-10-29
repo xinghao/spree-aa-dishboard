@@ -1,0 +1,31 @@
+
+<h3>Return Overview</h3>
+
+<%= render :partial => 'date_range_form' %>
+
+<br />
+<br />
+<br />
+<br />
+
+<table class="index">
+  <thead>
+    <tr>
+      <th>Product</th>
+      <th>Quantity</th>
+      <th>FOB</th>
+      <th>Total Cost</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @returns.each do |r| %>
+      <tr>
+      <td><%= Spree::Variant.find(r.variant_id).name_with_options_text %></td>
+      <td><%= link_to r.amount, "/admin/dashboard/stats/variant_return_overview/#{r.variant_id}?start=#{@start_from.to_date.to_s.gsub("-","/")}&end=#{@end_to.to_date.to_s.gsub("-","/")}" %></td>
+      <% fob = Spree::Variant.find(r.variant_id).product.get_fob.to_f.round(2)%>
+      <td><%= fob%></td>
+      <td><%= fob * r.amount.to_i%></td>
+      </tr>
+    <% end %>
+  </tbody>
+ </table>

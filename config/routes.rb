@@ -13,6 +13,8 @@ Spree::Core::Engine.routes.draw do
   
   match '/admin/dashboard/stats/product_overview' => 'Aa::Stats#product_overview'
   match '/admin/dashboard/stats/sales_overview' => 'Aa::Stats#sales_overview'
+  match '/admin/dashboard/stats/return_overview' => 'Aa::Stats#return_overview'
+  match '/admin/dashboard/stats/variant_return_overview/:id' => 'Aa::Stats#variant_return_overview'
   
   match 'admin/dashboard/shipmentmg/orders_in_warehourse' => 'Aa::Shipmentmg#orders_in_warehouse'  
     

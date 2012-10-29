@@ -1,5 +1,5 @@
 class Spree::Aa::StatsController < Spree::Admin::BaseController
-  before_filter :load_date_range, :only => [:sales_overview]
+  before_filter :load_date_range, :only => [:sales_overview, :return_overview, :variant_return_overview]
   
   def sales_overview
     @search_url = "/admin/dashboard/stats/sales_overview"; 
@@ -42,7 +42,14 @@ class Spree::Aa::StatsController < Spree::Admin::BaseController
   end
   
   
-
+  def return_overview
+    @returns = Spree::InventoryUnit.select("variant_id, count(id) as amount").where("state = ? and updated_at >= ? and updated_at < ?", "returned", @start_from.to_date, @end_to.to_date + 1.day).group("variant_id")    
+  end
+  
+  def variant_return_overview
+    @variant_id = params[:id]    
+    @returns = Spree::InventoryUnit.select("return_authorization_id, count(id) as amount").where("variant_id = ? and state = ? and updated_at >= ? and updated_at < ?", @variant_id, "returned", @start_from.to_date, @end_to.to_date + 1.day).group("return_authorization_id")    
+  end
   
   
   def product_overview
