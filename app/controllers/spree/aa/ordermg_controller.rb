@@ -8,9 +8,10 @@ class Spree::Aa::OrdermgController < Spree::Admin::BaseController
     @orders.each do |order|
       @extra_info[order.id] = Hash.new
       @extra_info[order.id]["amount"] = 0
+      @extra_info[order.id]["method"] = ""
       order.payments.each do |payment|
         @extra_info[order.id]["amount"] += payment.amount
-        @extra_info[order.id]["method"] = payment.payment_method.name
+        @extra_info[order.id]["method"] = payment.payment_method.name if !payment.payment_method.blank? 
       end 
     end
   end
