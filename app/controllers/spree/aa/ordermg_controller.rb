@@ -3,7 +3,16 @@ require 'csv'
 class Spree::Aa::OrdermgController < Spree::Admin::BaseController
   
   def canceled
-    @orders = Spree::Order.where("state = 'canceled'").order("completed_at asc").all
+    @orders = Spree::Order.includes(:payments).where("state = 'canceled'").order("completed_at asc").all
+    @extra_info = Hash.new
+    @orders.each do |order|
+      @extra_info[order.id] = Hash.new
+      @extra_info[order.id]["amount"] = 0
+      order.payments.each do |payment|
+        @extra_info[order.id]["amount"] += payment.amount
+        @extra_info[order.id]["method"] = payment.payment_method.name
+      end 
+    end
   end
   
   

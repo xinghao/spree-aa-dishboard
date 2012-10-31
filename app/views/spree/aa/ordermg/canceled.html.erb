@@ -6,10 +6,12 @@
     <tr>
       <th>completed_at</th>      
       <th>number</th>
+      <th>customer email</th>
       <th>state</th>
       <th>payment_state</th>
       <th>shipment_state</th>
       <th>total</th>
+      <th>payment method</th>
     </tr>
   </thead>
   <tbody>
@@ -17,10 +19,12 @@
     <tr>
       <td><%= order.completed_at%></td>
       <td><%= link_to order.number, admin_order_path(order) %></td>
+      <td><%= order.user.email %></td>
       <td><%= order.state.downcase %></td>
       <td><%= order.payment_state %></td>
       <td><%= order.shipment_state %></td>
-      <td><%= number_to_currency order.total %></td>
+      <td><%= number_to_currency @extra_info[order.id]["amount"] %></td>
+      <td><%= @extra_info[order.id]["method"] %></td>
     </tr>
   <% end %>
   </tbody>
