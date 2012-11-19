@@ -32,18 +32,20 @@ class DailySales
       ship_fee_per_dollar = (order.total - order.item_total) * 1.0 / order.item_total
       
       order.inventory_units.each do |iu|
-        @product_total += 1;
-        @cost += iu.variant.product.got_total_cost
-        if order.inventory_units.size > 1
-          ship_cost = iu.variant.price * ship_fee_per_dollar;
-        else
-          ship_cost = order.total - order.item_total
-        end 
-        if @product_hash.has_key?(iu.variant_id)
-          @product_hash[iu.variant_id][:quantity] += 1;
-          @product_hash[iu.variant_id][:revenue] += ship_cost + iu.variant.price;
-        else
-          @product_hash[iu.variant_id] = {:quantity => 1, :revenue => ship_cost + iu.variant.price};
+        if iu.state != "returned"
+          @product_total += 1;
+          @cost += iu.variant.product.got_total_cost
+          if order.inventory_units.size > 1
+            ship_cost = iu.variant.price * ship_fee_per_dollar;
+          else
+            ship_cost = order.total - order.item_total
+          end 
+          if @product_hash.has_key?(iu.variant_id)
+            @product_hash[iu.variant_id][:quantity] += 1;
+            @product_hash[iu.variant_id][:revenue] += ship_cost + iu.variant.price;
+          else
+            @product_hash[iu.variant_id] = {:quantity => 1, :revenue => ship_cost + iu.variant.price};
+          end
         end
       end
       
