@@ -28,6 +28,7 @@ class Spree::Aa::StatsController < Spree::Admin::BaseController
     end
     
     #@sales_products_array = @sales_products.sort {|a,b| b[1]<=>a[1]}
+    @sales_products_sorted_array = @sales_products.sort
     @sales_products_array = @sales_products
     
     if icount > 0

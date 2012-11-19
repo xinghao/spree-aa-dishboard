@@ -77,6 +77,7 @@
 <h4>Total Products: <%=@total_products%></h4>
 <table class="index" width="50%">
   <thead>
+    <th>Id</th>
     <th>Product</th>
     <th>Total Quantity</th>    
     <th>Revenue</th>
@@ -84,8 +85,11 @@
     <th>Total Cost</th>        
   </thead>
   <tbody>
-    <% @sales_products.each_pair do |key,value|%>
+    <% @sales_products_sorted_array.each do |key_array| %>
+      <% key = key_array[0];
+         value = @sales_products[key]%>
       <tr>
+      <td><%=key%></td>
         <td><%=Spree::Variant.find(key).name_with_options_text%></td>        
         <td><%=value[:quantity]%></td> 
         <td><%=value[:revenue].to_f.round(2)%></td>
