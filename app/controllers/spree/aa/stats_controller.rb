@@ -60,7 +60,8 @@ class Spree::Aa::StatsController < Spree::Admin::BaseController
     @variants.each do |variant|
       next if variant.product.has_variants? && variant.is_master 
       @stats[variant.id] = {"variant" => variant,
-                            "total" => variant.inventory_units.count, 
+                            "total" => variant.inventory_units.where("state != ?", "returned").count,
+                            "returned" => variant.inventory_units.where(:state => "returned").count, 
                             "shipped" => variant.inventory_units.where(:state => "shipped").count,
                             "sold" => variant.inventory_units.where(:state => "sold").count,
                             "backordered" => variant.inventory_units.where(:state => "backordered").count
