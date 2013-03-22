@@ -1,4 +1,10 @@
 Spree::Core::Engine.routes.draw do
+  namespace :admin do
+    resources :content_resources do 
+       put 'commit', :on => :member
+     end
+  end
+
   # Add your extension routes here
   match  'admin/dashboard' => 'Aa::Dashboard#index' 
   match 'admin/dashboard/shipmentmg/preview' => 'Aa::Shipmentmg#preview'

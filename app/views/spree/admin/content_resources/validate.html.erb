@@ -1,0 +1,54 @@
+<h3>Validate Feed</h3>
+<h4>Total entries in feed: <%=@lines.size%></h4>
+<h4><font color="red">Total Failed in feed: <%=@failed_line%></font></h4>
+<h4>Total New in feed: <%=@new_line_count%></h4>
+<h4>Total Update in feed: <%=@update_line_count%></h4>
+<h4>Total Skip in feed: <%=@skip_line_count%></h4>
+
+<p>
+Notes: <br />
+</p>
+
+
+<table class="index">
+  <thead>
+    <tr>
+      <th>Line No</th>            
+      <%Spree::ContentResource::CSV_HEAD.keys.each do |col_header|%>
+      <th><%=col_header%></th>
+      <%end%>
+      <th>Action</th>
+      <th>Valid</th>
+    </tr>
+  </thead>
+  <% icount = 0 %>
+  <tbody>
+    <% @lines.each do |line|%>
+      <tr>
+        <% icount += 1 %>
+        <td><%=icount%></td>
+        <%Spree::ContentResource::CSV_HEAD.keys.each do |col_header|%>
+            <td><font color="<%=line["content"][col_header]["updates"]%>"><%=line["content"][col_header]["value"]%></font></td>
+        <%end%>
+        <td>
+          <% if line["action"] == "new"%>
+            <font color="green"><%=line["action"]%></font>
+           <%else%>
+            <font color="red"><%=line["action"]%></font>
+          <%end%>
+        </td>        
+        <td><%=line["valid"]%></td>                
+      </tr>
+    <% end %>    
+  </tbody>
+</table>
+
+<%= form_for [:admin, @content_resource], :url => { :action => "commit" }, :html => { :multipart => true } do |f| %>
+  <p class="form-buttons" data-hook="buttons">
+    <% if !@content_resource.valid%>
+      <button type="submit" disabled="disabled"><span>Process</span></button>
+     <% else %>
+      <%= button  "process" %>
+     <% end %>
+  </p>
+<% end %>
