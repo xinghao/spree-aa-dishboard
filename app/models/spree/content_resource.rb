@@ -46,12 +46,12 @@ module Spree
                               
     }
     
-    # unless !Rails.env.development?
-    #   paperclip_opts.merge! :storage        => :s3,
-    #                         :s3_credentials => "#{Rails.root}/config/s3.yml",
-    #                         :s3_host_name => "s3-ap-southeast-1.amazonaws.com",
-    #                         :path           => 'app/public/spree/shipment-manifest/:id/:basename.:extension'                           
-    # end
+    if !Rails.env.development?
+      paperclip_opts.merge! :storage        => :s3,
+                            :s3_credentials => "#{Rails.root}/config/s3.yml",
+#                            :s3_host_name => "s3-ap-southeast-1.amazonaws.com",
+                            :path           => 'app/public/spree/shipment-manifest/:id/:basename.:extension'                           
+    end
 
       
     has_attached_file :avatar, paperclip_opts
