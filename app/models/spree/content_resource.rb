@@ -21,7 +21,7 @@ module Spree
 "OtherItemAttribute1" => "other_item_attribute1",    
 "OtherItemAttribute2" => "other_item_attribute2",
 "OtherImageURL1" => "other_image_url1",            
-"OtherImageURL2" => "other_image_url2",
+#"OtherImageURL2" => "other_image_url2",
 "ProductTaxCode" => "product_tax_code",
 "BandWidth" => "band_width",        
 "BandWidthUnitOfMeasure" => "band_width_unit_of_measure",
@@ -92,7 +92,7 @@ module Spree
         end
         
         if line["action"] != "skip"
-          
+          puts "SKU: #{line["content"]["SKU"]["value"].to_s}"
           pattributes = Hash.new
           CSV_HEAD.each_pair do |col_header, key|
             pattributes[key] = line["content"][col_header]["value"]  
@@ -135,12 +135,14 @@ module Spree
             image.save
           end
 
-          if new_product
-            image = ContentResource::pull_image(nil, line["content"]["OtherImageURL2"]["value"], line["content"]["StandardProductID"]["value"] + "-3.jpg")
-            image.position = 3;
-            image.save
-            p.images.push image                         
-          elsif p.other_image_url2 != line["content"]["OtherImageURL2"]["value"]            
+          if new_product 
+            if !line["content"]["OtherImageURL2"].blank?
+              image = ContentResource::pull_image(nil, line["content"]["OtherImageURL2"]["value"], line["content"]["StandardProductID"]["value"] + "-3.jpg")
+              image.position = 3;
+              image.save
+              p.images.push image
+            end                         
+          elsif !line["content"]["OtherImageURL2"].blank? && p.other_image_url2 != line["content"]["OtherImageURL2"]["value"]            
             image = ContentResource::pull_image(p.images[2], line["content"]["OtherImageURL2"]["value"], line["content"]["StandardProductID"]["value"] + "-3.jpg")
             image.save
           end          
@@ -205,7 +207,8 @@ module Spree
         cl["action"] = "new"
         cl["content"] = Hash.new
         CSV_HEAD.keys.each do |col_header|
-          cl["valid"] = "#{col_header} empty or too long" if line[col_header].blank? || (line[col_header].length > 255 && col_header!= "Description" && col_header!= "other_item_attribute1" && col_header!= "other_item_attribute2")          
+          cl["valid"] = "#{col_header} empty or too long" if line[col_header].blank? || (line[col_header].length > 255 && col_header!= "Description" && col_header!= "other_item_attribute1" && col_header!= "other_item_attribute2")
+          
           cl["content"][col_header] = Hash.new
           cl["content"][col_header]["value"] = line[col_header]
           cl["content"][col_header]["updates"] = "green"
@@ -222,7 +225,7 @@ module Spree
                  if (key == "sku" && line[col_header] == p.sku) || (key == "supplier_id" && GOLDWATCHCO + line[col_header] == p.supplier_id) || (key == "price" && line[col_header] + ".0" == p.price.to_s || key == "on_hand" && line[col_header] == p.on_hand.to_s)
                    #puts "FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF #{line[col_header]} -> #{p.sku}"                  
                  else                
-                    puts "GGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGG #{line[col_header] + ".00"} == #{p.price.to_s}"               
+                    #puts "GGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGG #{line[col_header] + ".00"} == #{p.price.to_s}"               
                     match = false
                  end
              end
